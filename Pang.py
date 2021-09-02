@@ -1,8 +1,23 @@
+# making exe file
+# pyinstaller -w -F --add-data '.\images\*.png;.\images' --add-data '*.ttf;.' .\Pang.py
+
 #####################################################################################
 # 게임개발 기본 templete
 import os
 import pygame
 import math
+
+# 리소스 복사를 위한 간접 path 사용
+
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 
 # 필수초기화
 pygame.init()
@@ -21,7 +36,7 @@ clock = pygame.time.Clock()
 #####################################################################################
 # images load
 
-current_path = os.path.dirname(__file__)  # 현재 파일위치 반환
+current_path = resource_path(os.path.dirname(__file__))  # 현재 파일위치 반환
 image_path = os.path.join(current_path, "images")
 
 # 배경
@@ -71,7 +86,8 @@ ball_speed = 0.1  # x축 속도
 gravity = 0.001  # y축 중력 가속도 (화면 아래방향)
 
 # 타이머 & 메시지
-game_font = pygame.font.Font(None, 40)  # 폰트,크기
+game_font = pygame.font.Font(os.path.join(
+    current_path, "freesansbold.ttf"), 40)  # 폰트,크기
 game_result = ["Game Over", "Time Over", "Mission Complete"]
 result_msg = ""
 start_ticks = pygame.time.get_ticks()
@@ -84,7 +100,7 @@ running = True
 while running:
 
     # fps 설정 , dt = 직전 업데이트 후 경과시간
-    dt = clock.tick(30)
+    dt = clock.tick(60)
 
     # 이벤트 처리 (키보드, 마우스 등)
     for event in pygame.event.get():
